@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>American Jeans | Cuenca</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0f172a;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .denim-text {
+            background: linear-gradient(to right, #60a5fa, #2563eb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .product-card:hover .btn-buy {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body class="text-slate-200 overflow-x-hidden">
+
+    <!-- Header / Nav -->
+    <nav class="fixed w-full z-50 glass py-4 px-6 flex justify-between items-center">
+        <div class="text-2xl font-extrabold tracking-tighter">
+            <span class="text-white">AMERICAN</span><span class="text-blue-500">JEANS</span>
+        </div>
+        <div class="hidden md:flex gap-8 text-sm font-semibold uppercase tracking-widest">
+            <a href="#inicio" class="hover:text-blue-400 transition">Inicio</a>
+            <a href="#catalogo" class="hover:text-blue-400 transition">Showroom</a>
+            <a href="#contacto" class="hover:text-blue-400 transition">Ubicación</a>
+        </div>
+        <button
+            class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-full text-sm font-bold transition-all shadow-lg shadow-blue-500/20">
+            Original Brands
+        </button>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="relative h-screen flex items-center justify-center pt-20 overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#0f172a] z-10"></div>
+            <img src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=1920&q=80"
+                class="w-full h-full object-cover opacity-40 scale-105 animate-[zoom_20s_infinite_alternate]"
+                alt="Background">
+        </div>
+
+        <div class="relative z-20 text-center px-4">
+            <h1 class="text-6xl md:text-8xl font-black mb-4 animate__animated animate__fadeInDown">
+                STYLISH <span class="denim-text">DENIM</span>
+            </h1>
+            <p class="text-xl md:text-2xl text-slate-400 max-w-2xl mx-auto mb-8 animate__animated animate__fadeInUp">
+                Exclusividad americana en el corazón de Cuenca. Marcas originales, estilo inigualable.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4 animate__animated animate__fadeInUp animate__delay-1s">
+                <a href="#catalogo"
+                    class="bg-white text-slate-900 px-10 py-4 rounded-full font-bold hover:scale-105 transition">Explorar
+                    Catálogo</a>
+                <a href="#contacto" class="glass px-10 py-4 rounded-full font-bold hover:bg-white/10 transition">Visitar
+                    Local</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Marcas Carousel (Interactividad suave) -->
+    <div class="py-12 bg-black/20 border-y border-white/5 overflow-hidden">
+        <div class="flex gap-12 items-center whitespace-nowrap animate-[scroll_30s_linear_infinite]">
+            <span class="text-4xl font-bold opacity-20">LEVI'S</span>
+            <span class="text-4xl font-bold opacity-20">HOLLISTER</span>
+            <span class="text-4xl font-bold opacity-20">AMERICAN EAGLE</span>
+            <span class="text-4xl font-bold opacity-20">CALVIN KLEIN</span>
+            <span class="text-4xl font-bold opacity-20">NEW BALANCE</span>
+            <span class="text-4xl font-bold opacity-20">SKECHERS</span>
+            <span class="text-4xl font-bold opacity-20">VANS</span>
+            <!-- Repetir para el scroll infinito -->
+            <span class="text-4xl font-bold opacity-20">LEVI'S</span>
+            <span class="text-4xl font-bold opacity-20">HOLLISTER</span>
+            <span class="text-4xl font-bold opacity-20">AMERICAN EAGLE</span>
+        </div>
+    </div>
+
+    <!-- Catálogo Inteligente -->
+    <section id="catalogo" class="py-24 px-6 max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
+            <div>
+                <h2 class="text-4xl font-bold mb-2">Nuestro Showroom</h2>
+                <p class="text-slate-400 font-medium italic">Filtra por tu marca favorita o género.</p>
+            </div>
+
+            <!-- Filtros TS -->
+            <div id="filter-container" class="flex flex-wrap gap-2">
+                <!-- Los botones se generan vía TS -->
+            </div>
+        </div>
+
+        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Los productos se inyectan vía TS -->
+        </div>
+    </section>
+
+    <!-- Footer & Mapa -->
+    <footer id="contacto" class="bg-black/40 border-t border-white/5 pt-20 pb-10">
+        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 mb-20">
+            <div class="space-y-6">
+                <h3 class="text-3xl font-bold italic">Encuéntranos en Cuenca</h3>
+                <div class="space-y-4">
+                    <div class="flex items-start gap-4 p-4 glass rounded-2xl">
+                        <div class="bg-blue-600/20 p-3 rounded-xl text-blue-400">📍</div>
+                        <div>
+                            <p class="font-bold">Ubicación Física</p>
+                            <p class="text-slate-400">Calle Sucre y Benigno Malo, Edificio Central</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4 p-4 glass rounded-2xl">
+                        <div class="bg-green-600/20 p-3 rounded-xl text-green-400">⏰</div>
+                        <div>
+                            <p class="font-bold">Horarios de Atención</p>
+                            <p class="text-slate-400">Lun - Sáb: 10:00 AM - 7:30 PM</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="rounded-3xl overflow-hidden h-[300px] border border-white/10 shadow-2xl">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3984.72!2d-79.00!3d-2.9!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMsKwNTQnMDAuMCJTIDc5wrAwMCcwMC4wIlc!5e0!3m2!1ses!2sec!4v1622500000000"
+                    width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+        </div>
+        <div class="text-center text-slate-500 text-sm border-t border-white/5 pt-10">
+            &copy; 2024 American Jeans - Importadores Directos USA.
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
