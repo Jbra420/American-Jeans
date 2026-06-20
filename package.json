@@ -1,0 +1,12 @@
+{
+  "name": "american-jeans",
+  "version": "1.0.0",
+  "description": "American Jeans - Catálogo web Cuenca",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  }
+}

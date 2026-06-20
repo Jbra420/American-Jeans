@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "module": "None",
+    "ignoreDeprecations": "6.0",
+    "strict": true,
+    "outDir": "./",
+    "rootDir": "./",
+    "removeComments": false,
+    "skipLibCheck": true,
+    "noEmitOnError": true
+  },
+  "include": ["app.ts"],
+  "exclude": ["node_modules"]
+}
