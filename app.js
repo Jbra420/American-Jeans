@@ -385,10 +385,10 @@ class Showroom {
                         ${badgeHtml}
                     </div>
                     <div class="p-6 space-y-2 bg-white">
-                        <p class="text-blue-500 text-[10px] font-bold uppercase tracking-widest">${p.brand} • ${p.category} (${p.gender})</p>
-                        <h3 class="text-base font-bold text-slate-800 tracking-tight line-clamp-1 group-hover:text-blue-600 transition duration-300">${p.name}</h3>
+                        <p class="text-blue-600 text-[10px] font-extrabold uppercase tracking-widest">${p.brand} • ${p.category} (${p.gender})</p>
+                        <h3 class="text-base font-extrabold text-slate-900 tracking-tight line-clamp-1">${p.name}</h3>
                         <div class="flex justify-between items-center pt-2 border-t border-slate-100">
-                            <span class="text-xl font-extrabold text-slate-900">$${p.price.toFixed(2)}</span>
+                            <span class="text-xl font-black text-black">$${p.price.toFixed(2)}</span>
                             <div class="flex gap-1 flex-wrap justify-end">
                                 ${p.sizes.slice(0, 3).map(s => `<span class="text-[9px] border border-slate-200 px-1.5 py-0.5 rounded bg-slate-50 text-slate-600 font-bold">${s}</span>`).join('')}
                                 ${p.sizes.length > 3 ? `<span class="text-[9px] border border-slate-200 px-1.5 py-0.5 rounded bg-slate-50 text-slate-600 font-bold">+${p.sizes.length - 3}</span>` : ''}
