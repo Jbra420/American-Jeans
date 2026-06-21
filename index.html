@@ -12,7 +12,8 @@
 
         body {
             font-family: 'Outfit', sans-serif;
-            background-color: #030712;
+            background-color: #f8fafc;
+            color: #0f172a;
         }
 
         .font-luxury {
@@ -20,9 +21,11 @@
         }
 
         .glass {
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(15, 23, 42, 0.06);
+            box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.05);
         }
 
         .glow-bg {
@@ -30,7 +33,7 @@
             width: 500px;
             height: 500px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.06) 0%, rgba(99, 102, 241, 0.03) 50%, transparent 100%);
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, rgba(99, 102, 241, 0.04) 50%, transparent 100%);
             filter: blur(60px);
             pointer-events: none;
             z-index: 0;
@@ -42,17 +45,26 @@
 
         .product-card:hover {
             border-color: rgba(59, 130, 246, 0.35);
-            box-shadow: 0 20px 30px -10px rgba(59, 130, 246, 0.15);
+            box-shadow: 0 20px 30px -10px rgba(59, 130, 246, 0.12);
         }
 
         .product-card:hover .btn-buy {
             opacity: 1;
             transform: translateY(0);
         }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+        .animate-shake {
+            animation: shake 0.2s ease-in-out 0s 2;
+        }
     </style>
 </head>
 
-<body class="text-slate-200 overflow-x-hidden relative min-h-screen">
+<body class="text-slate-800 bg-slate-50 overflow-x-hidden relative min-h-screen">
     <!-- Luces de fondo de lujo -->
     <div class="glow-bg top-[10%] left-[-10%] animate-[pulse_10s_infinite]"></div>
     <div class="glow-bg top-[55%] right-[-15%] animate-[pulse_15s_infinite]"></div>
@@ -61,15 +73,15 @@
     <!-- Header / Nav -->
     <nav class="fixed w-full z-50 glass py-3 px-4 md:py-4 md:px-6 flex justify-between items-center">
         <div class="text-xl md:text-2xl font-extrabold tracking-tighter">
-            <span class="text-white">AMERICAN</span><span class="text-blue-500">JEANS</span>
+            <span class="text-slate-900">AMERICAN</span><span class="text-blue-600">JEANS</span>
         </div>
-        <div class="hidden md:flex gap-8 text-sm font-semibold uppercase tracking-widest">
-            <a href="#inicio" class="hover:text-blue-400 transition">Inicio</a>
-            <a href="#catalogo" class="hover:text-blue-400 transition">Catálogo</a>
-            <a href="#contacto" class="hover:text-blue-400 transition">Ubicación</a>
+        <div class="hidden md:flex gap-8 text-sm font-semibold uppercase tracking-widest text-slate-600">
+            <a href="#inicio" class="hover:text-blue-600 transition">Inicio</a>
+            <a href="#catalogo" class="hover:text-blue-600 transition">Catálogo</a>
+            <a href="#contacto" class="hover:text-blue-600 transition">Ubicación</a>
         </div>
         <a href="#catalogo"
-            class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 md:px-5 md:py-2 rounded-full text-xs md:text-sm font-bold transition-all shadow-lg shadow-blue-500/30 active:scale-95">
+            class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 md:px-5 md:py-2 rounded-full text-xs md:text-sm font-bold transition-all shadow-lg shadow-blue-500/20 active:scale-95">
             Ver Catálogo
         </a>
     </nav>
@@ -77,9 +89,9 @@
     <!-- Hero Section -->
     <section id="inicio" class="relative h-screen flex items-center justify-center pt-20 overflow-hidden">
         <div class="absolute inset-0 z-0">
-            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#0f172a] z-10"></div>
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-slate-50 z-10"></div>
             <img src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=1920&q=80"
-                class="w-full h-full object-cover opacity-40 scale-105 animate-[zoom_20s_infinite_alternate]"
+                class="w-full h-full object-cover opacity-20 scale-105 animate-[zoom_20s_infinite_alternate]"
                 alt="Background">
         </div>
 
@@ -87,52 +99,52 @@
             <h1
                 class="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black mb-6 animate__animated animate__fadeInDown leading-none tracking-tighter">
                 <span
-                    class="text-transparent bg-clip-text bg-gradient-to-br from-white to-slate-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">ESTILO</span><br />
+                    class="text-transparent bg-clip-text bg-gradient-to-br from-slate-900 to-slate-600 drop-shadow-[0_4px_10px_rgba(15,23,42,0.08)]">ESTILO</span><br />
                 <span
-                    class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-700 drop-shadow-[0_0_25px_rgba(37,99,235,0.5)]">AUTÉNTICO</span>
+                    class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-blue-800 drop-shadow-[0_4px_15px_rgba(37,99,235,0.15)]">AUTÉNTICO</span>
             </h1>
             <p
-                class="text-lg md:text-2xl text-slate-300 max-w-2xl mx-auto mb-8 animate__animated animate__fadeInUp font-medium">
+                class="text-lg md:text-2xl text-slate-600 max-w-2xl mx-auto mb-8 animate__animated animate__fadeInUp font-medium">
                 Redefiniendo la moda casual con la línea más completa de ropa para hombre y mujer.<br />Descubre <strong
-                    class="text-blue-400 font-bold">American Jeans</strong> en el corazón de Cuenca.
+                    class="text-blue-600 font-bold">American Jeans</strong> en el corazón de Cuenca.
             </p>
             <div class="flex flex-wrap justify-center gap-4 animate__animated animate__fadeInUp animate__delay-1s">
                 <a href="#catalogo"
-                    class="bg-white text-slate-900 px-10 py-4 rounded-full font-bold hover:scale-105 transition">Explorar
+                    class="bg-slate-900 text-white px-10 py-4 rounded-full font-bold hover:scale-105 hover:bg-slate-800 transition shadow-lg shadow-slate-900/10">Explorar
                     Catálogo</a>
-                <a href="#contacto" class="glass px-10 py-4 rounded-full font-bold hover:bg-white/10 transition">Visitar
+                <a href="#contacto" class="glass px-10 py-4 rounded-full font-bold hover:bg-slate-100/50 transition">Visitar
                     Local</a>
             </div>
         </div>
     </section>
 
     <!-- Marcas Carousel (Interactividad suave) -->
-    <div class="py-12 bg-black/20 border-y border-white/5 overflow-hidden">
-        <div class="flex gap-12 items-center whitespace-nowrap animate-[scroll_30s_linear_infinite]">
-            <span class="text-4xl font-bold opacity-20">LEVI'S</span>
-            <span class="text-4xl font-bold opacity-20">HOLLISTER</span>
-            <span class="text-4xl font-bold opacity-20">AMERICAN EAGLE</span>
-            <span class="text-4xl font-bold opacity-20">CALVIN KLEIN</span>
-            <span class="text-4xl font-bold opacity-20">NEW BALANCE</span>
-            <span class="text-4xl font-bold opacity-20">SKECHERS</span>
-            <span class="text-4xl font-bold opacity-20">VANS</span>
+    <div class="py-12 bg-slate-100 border-y border-slate-200/60 overflow-hidden">
+        <div class="flex gap-12 items-center whitespace-nowrap animate-[scroll_30s_linear_infinite] text-slate-900/15">
+            <span class="text-4xl font-bold">LEVI'S</span>
+            <span class="text-4xl font-bold">HOLLISTER</span>
+            <span class="text-4xl font-bold">AMERICAN EAGLE</span>
+            <span class="text-4xl font-bold">CALVIN KLEIN</span>
+            <span class="text-4xl font-bold">NEW BALANCE</span>
+            <span class="text-4xl font-bold">SKECHERS</span>
+            <span class="text-4xl font-bold">VANS</span>
             <!-- Repetir para el scroll infinito -->
-            <span class="text-4xl font-bold opacity-20">LEVI'S</span>
-            <span class="text-4xl font-bold opacity-20">HOLLISTER</span>
-            <span class="text-4xl font-bold opacity-20">AMERICAN EAGLE</span>
+            <span class="text-4xl font-bold">LEVI'S</span>
+            <span class="text-4xl font-bold">HOLLISTER</span>
+            <span class="text-4xl font-bold">AMERICAN EAGLE</span>
         </div>
     </div>
 
     <!-- Catálogo Inteligente -->
     <section id="catalogo" class="py-24 px-6 max-w-7xl mx-auto relative z-10">
-        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8 border-b border-white/5 pb-8">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8 border-b border-slate-200/60 pb-8">
             <div class="space-y-3">
                 <h2 class="text-4xl md:text-5xl font-luxury font-bold leading-tight tracking-tight">
                     Catálogo
                     <span
-                        class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400 font-extrabold italic">Exclusivo</span>
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 font-extrabold italic">Exclusivo</span>
                 </h2>
-                <p class="text-slate-400 text-xs tracking-wider uppercase font-semibold">Selecciona tu estilo, talla y
+                <p class="text-slate-500 text-xs tracking-wider uppercase font-semibold">Selecciona tu estilo, talla y
                     marca ideal.</p>
             </div>
 
@@ -140,12 +152,12 @@
             <div class="flex flex-col sm:flex-row gap-4 w-full md:max-w-md">
                 <div class="relative flex-1">
                     <input type="text" id="catalog-search" placeholder="Buscar pantalones, chaquetas, tenis..."
-                        class="w-full bg-white/5 border border-white/10 rounded-full px-5 py-2.5 pl-11 text-xs md:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500/50 focus:bg-white/[0.08] transition duration-300">
-                    <span class="absolute left-4 top-2.5 md:top-3 text-slate-500 text-xs md:text-sm">🔍</span>
+                        class="w-full bg-white border border-slate-200 rounded-full px-5 py-2.5 pl-11 text-xs md:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500/50 focus:bg-slate-50/50 shadow-sm transition duration-300">
+                    <span class="absolute left-4 top-2.5 md:top-3 text-slate-400 text-xs md:text-sm">🔍</span>
                 </div>
                 <div class="flex items-center justify-between sm:justify-start gap-3">
                     <span id="product-count-badge"
-                        class="bg-blue-900/40 text-blue-400 text-xs font-bold px-4 py-2 rounded-full border border-blue-500/20 whitespace-nowrap">
+                        class="bg-blue-50 text-blue-600 text-xs font-bold px-4 py-2 rounded-full border border-blue-100 whitespace-nowrap shadow-sm">
                         0 artículos
                     </span>
                 </div>
@@ -155,29 +167,29 @@
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
             <!-- Barra lateral de filtros (Premium) -->
             <div class="lg:col-span-1 space-y-6">
-                <div class="glass rounded-3xl p-6 space-y-6 sticky top-24 border border-white/5">
+                <div class="glass rounded-3xl p-6 space-y-6 sticky top-24 border border-slate-200/50">
                     <div>
-                        <h4 class="text-xs font-extrabold tracking-widest text-slate-400 uppercase mb-3">Género</h4>
+                        <h4 class="text-xs font-extrabold tracking-widest text-slate-500 uppercase mb-3">Género</h4>
                         <div id="gender-filter-container" class="flex flex-col gap-2">
-                            <!-- Generado por TS -->
+                            <!-- Generado por JS -->
                         </div>
                     </div>
 
-                    <hr class="border-white/5">
+                    <hr class="border-slate-200/60">
 
                     <div>
-                        <h4 class="text-xs font-extrabold tracking-widest text-slate-400 uppercase mb-3">Colección</h4>
+                        <h4 class="text-xs font-extrabold tracking-widest text-slate-500 uppercase mb-3">Colección</h4>
                         <div id="status-filter-container" class="flex flex-col gap-2">
-                            <!-- Generado por TS -->
+                            <!-- Generado por JS -->
                         </div>
                     </div>
                     
-                    <hr class="border-white/5">
+                    <hr class="border-slate-200/60">
                     
                     <div>
-                        <h4 class="text-xs font-extrabold tracking-widest text-slate-400 uppercase mb-3">Categoría de Prenda</h4>
+                        <h4 class="text-xs font-extrabold tracking-widest text-slate-500 uppercase mb-3">Categoría de Prenda</h4>
                         <div id="category-filter-container" class="flex flex-col gap-2">
-                            <!-- Generado por TS -->
+                            <!-- Generado por JS -->
                         </div>
                     </div>
                 </div>
@@ -193,28 +205,28 @@
     </section>
 
     <!-- Footer & Mapa -->
-    <footer id="contacto" class="bg-black/40 border-t border-white/5 pt-20 pb-10">
+    <footer id="contacto" class="bg-slate-100 border-t border-slate-200/60 pt-20 pb-10">
         <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 mb-20">
             <div class="space-y-6">
-                <h3 class="text-3xl font-bold italic">Encuéntranos en Cuenca</h3>
+                <h3 class="text-3xl font-bold italic text-slate-900">Encuéntranos en Cuenca</h3>
                 <div class="space-y-4">
                     <div class="flex items-start gap-4 p-4 glass rounded-2xl">
-                        <div class="bg-blue-600/20 p-3 rounded-xl text-blue-400">📍</div>
+                        <div class="bg-blue-50 p-3 rounded-xl text-blue-600 shadow-sm">📍</div>
                         <div>
-                            <p class="font-bold">Ubicación Física</p>
-                            <p class="text-slate-400">Gran Colombia 10-17 y Padre Aguirre, Santo Domingo, Cuenca</p>
+                            <p class="font-bold text-slate-800">Ubicación Física</p>
+                            <p class="text-slate-500 text-sm">Gran Colombia 10-17 y Padre Aguirre, Santo Domingo, Cuenca</p>
                         </div>
                     </div>
                     <div class="flex items-start gap-4 p-4 glass rounded-2xl">
-                        <div class="bg-green-600/20 p-3 rounded-xl text-green-400">⏰</div>
+                        <div class="bg-green-50 p-3 rounded-xl text-green-600 shadow-sm">⏰</div>
                         <div>
-                            <p class="font-bold">Horarios de Atención</p>
-                            <p class="text-slate-400">Lun - Sáb: 10:00 AM - 7:30 PM</p>
+                            <p class="font-bold text-slate-800">Horarios de Atención</p>
+                            <p class="text-slate-500 text-sm">Lun - Sáb: 10:00 AM - 7:30 PM</p>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="rounded-3xl overflow-hidden h-[300px] border border-white/10 shadow-2xl">
+            <div class="rounded-3xl overflow-hidden h-[300px] border border-slate-200/60 shadow-lg">
                 <iframe
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d998.6116640523!2d-79.00447!3d-2.89765!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91cd181051c4b1af%3A0xfb4ad1cd03d264e8!2sAmerican%20Jeans!5e0!3m2!1ses!2sec!4v1718900000000"
                     width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
@@ -222,10 +234,10 @@
             </div>
         </div>
         <div
-            class="text-center text-slate-500 text-sm border-t border-white/5 pt-10 flex flex-col md:flex-row justify-between items-center gap-4 px-6">
+            class="text-center text-slate-500 text-sm border-t border-slate-200/60 pt-10 flex flex-col md:flex-row justify-between items-center gap-4 px-6">
             <div>&copy; 2024 American Jeans - Importadores Directos USA.</div>
             <button id="admin-access-btn"
-                class="text-xs text-slate-600 hover:text-blue-400 transition font-bold flex items-center gap-1.5 border border-slate-800 hover:border-blue-400/40 rounded-full px-4 py-1.5 bg-black/10">
+                class="text-xs text-slate-500 hover:text-blue-600 transition font-bold flex items-center gap-1.5 border border-slate-200 hover:border-blue-200/80 rounded-full px-4 py-1.5 bg-white shadow-sm">
                 🔒 Acceso Administrador
             </button>
         </div>
@@ -233,19 +245,19 @@
 
     <!-- Dialog de Autenticación de Administrador -->
     <dialog id="admin-auth-dialog"
-        class="glass rounded-3xl p-6 text-slate-200 w-full max-w-md border border-white/10 backdrop:bg-black/80 focus:outline-none">
+        class="bg-white rounded-3xl p-6 text-slate-800 w-full max-w-md border border-slate-100 shadow-2xl backdrop:bg-black/60 focus:outline-none">
         <div class="flex justify-between items-center mb-6">
-            <h3 class="text-xl font-extrabold tracking-tight">Acceso de Administración</h3>
-            <button id="close-auth-btn" class="text-slate-400 hover:text-white text-xl font-bold">&times;</button>
+            <h3 class="text-xl font-extrabold tracking-tight text-slate-900">Acceso de Administración</h3>
+            <button id="close-auth-btn" class="text-slate-400 hover:text-slate-800 text-xl font-bold">&times;</button>
         </div>
         <form id="admin-auth-form" class="space-y-4">
             <div>
                 <label for="admin-password"
-                    class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Contraseña de
+                    class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Contraseña de
                     Acceso</label>
                 <input type="password" id="admin-password" placeholder="Introduce la contraseña" required
-                    class="w-full bg-slate-900/80 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition">
-                <p id="auth-error-msg" class="text-red-400 text-xs mt-2 hidden">⚠️ Contraseña incorrecta. Inténtalo de
+                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white transition">
+                <p id="auth-error-msg" class="text-red-500 text-xs mt-2 hidden">⚠️ Contraseña incorrecta. Inténtalo de
                     nuevo.</p>
             </div>
             <button type="submit"
@@ -257,25 +269,21 @@
 
     <!-- Dialog del Panel de Administración -->
     <dialog id="admin-panel-dialog"
-        class="glass rounded-3xl p-6 md:p-8 text-slate-200 w-full max-w-5xl h-[85vh] border border-white/10 backdrop:bg-black/80 focus:outline-none">
+        class="bg-white rounded-3xl p-6 md:p-8 text-slate-800 w-full max-w-5xl h-[85vh] border border-slate-100 shadow-2xl backdrop:bg-black/60 focus:outline-none">
         <div
-            class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-white/5 pb-4">
+            class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-slate-200/60 pb-4">
             <div>
-                <h3 class="text-2xl md:text-3xl font-extrabold tracking-tight">Panel de Control <span
-                        class="text-blue-500">Catálogo</span></h3>
-                <p id="db-status-indicator" class="text-xs text-amber-400 font-semibold mt-1">⚠️ Cargando estado de la base de datos...</p>
+                <h3 class="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900">Panel de Control <span
+                        class="text-blue-600">Catálogo</span></h3>
+                <p id="db-status-indicator" class="text-xs text-amber-600 font-semibold mt-1">⚠️ Cargando estado de la base de datos...</p>
             </div>
             <div class="flex flex-wrap gap-2.5">
-                <button id="reset-catalog-btn"
-                    class="bg-red-950/40 hover:bg-red-900/60 text-red-400 border border-red-500/20 px-3 py-2 rounded-xl text-xs md:text-sm font-bold transition active:scale-95">
-                    🔄 Restaurar Original
-                </button>
-                <button id="download-json-btn"
-                    class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-xs md:text-sm font-bold transition flex items-center gap-2 active:scale-95 shadow-lg shadow-emerald-500/20">
-                    📥 Descargar products.json
+                <button id="refresh-catalog-btn"
+                    class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold transition active:scale-95 flex items-center gap-1.5 shadow-lg shadow-blue-500/20">
+                    🔄 Actualizar
                 </button>
                 <button id="close-admin-panel-btn"
-                    class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-xs md:text-sm font-bold transition active:scale-95">
+                    class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold transition active:scale-95 border border-slate-200/60 shadow-sm">
                     Cerrar Panel
                 </button>
             </div>
@@ -284,38 +292,38 @@
         <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 h-[calc(100%-85px)] overflow-y-auto pr-1">
             <!-- Formulario de Producto (2/5 del ancho) -->
             <div
-                class="lg:col-span-2 space-y-4 border-b lg:border-b-0 lg:border-r border-white/10 pb-6 lg:pb-0 lg:pr-6">
-                <h4 id="form-title" class="text-base font-bold text-blue-400 uppercase tracking-wider">Añadir Nuevo
+                class="lg:col-span-2 space-y-4 border-b lg:border-b-0 lg:border-r border-slate-200/60 pb-6 lg:pb-0 lg:pr-6">
+                <h4 id="form-title" class="text-base font-bold text-blue-600 uppercase tracking-wider">Añadir Nuevo
                     Producto</h4>
                 <form id="product-form" class="space-y-3.5">
                     <input type="hidden" id="product-id" value="">
                     <div>
                         <label
-                            class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Nombre</label>
+                            class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Nombre</label>
                         <input type="text" id="form-name" required placeholder="Ej: Levi's 501 Original Fit"
-                            class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-xs md:text-sm focus:outline-none focus:border-blue-500 transition">
+                            class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-2.5 text-xs md:text-sm focus:outline-none focus:border-blue-500 focus:bg-white transition">
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label
-                                class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Marca</label>
+                                class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Marca</label>
                             <input type="text" id="form-brand" required placeholder="Ej: Levi's"
-                                class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-xs md:text-sm focus:outline-none focus:border-blue-500 transition">
+                                class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-2.5 text-xs md:text-sm focus:outline-none focus:border-blue-500 focus:bg-white transition">
                         </div>
                         <div>
                             <label
-                                class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Precio
+                                class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Precio
                                 ($)</label>
                             <input type="number" id="form-price" step="0.01" required placeholder="58.00"
-                                class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-xs md:text-sm focus:outline-none focus:border-blue-500 transition">
+                                class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-2.5 text-xs md:text-sm focus:outline-none focus:border-blue-500 focus:bg-white transition">
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label
-                                class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Categoría</label>
+                                class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Categoría</label>
                             <select id="form-category"
-                                class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-xs md:text-sm focus:outline-none focus:border-blue-500 transition">
+                                class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-2.5 text-xs md:text-sm focus:outline-none focus:border-blue-500 focus:bg-white transition">
                                 <option value="Pantalones">Pantalones</option>
                                 <option value="Camisas">Camisas</option>
                                 <option value="Jackets">Jackets</option>
@@ -326,9 +334,9 @@
                         </div>
                         <div>
                             <label
-                                class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Género</label>
+                                class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Género</label>
                             <select id="form-gender"
-                                class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-xs md:text-sm focus:outline-none focus:border-blue-500 transition">
+                                class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-2.5 text-xs md:text-sm focus:outline-none focus:border-blue-500 focus:bg-white transition">
                                 <option value="Hombre">Hombre</option>
                                 <option value="Mujer">Mujer</option>
                                 <option value="Unisex">Unisex</option>
@@ -336,32 +344,32 @@
                         </div>
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Tallas
+                        <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Tallas
                             (separadas por comas)</label>
                         <input type="text" id="form-sizes" required placeholder="Ej: 30, 32, 34 o S, M, L"
-                            class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-xs md:text-sm focus:outline-none focus:border-blue-500 transition">
+                            class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-2.5 text-xs md:text-sm focus:outline-none focus:border-blue-500 focus:bg-white transition">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Foto
+                        <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Foto
                             del Producto</label>
                         <div class="flex gap-3 items-center">
                             <!-- Input para seleccionar archivo -->
                             <div class="flex-1">
                                 <label for="form-image-file"
-                                    class="flex flex-col items-center justify-center border border-dashed border-white/20 hover:border-blue-500/50 hover:bg-white/[0.02] rounded-xl px-4 py-3.5 cursor-pointer transition text-center group">
-                                    <span class="text-xs font-bold text-slate-400 group-hover:text-white">📸 Seleccionar
+                                    class="flex flex-col items-center justify-center border border-dashed border-slate-300 hover:border-blue-500 hover:bg-slate-50 rounded-xl px-4 py-3.5 cursor-pointer transition text-center group bg-slate-50">
+                                    <span class="text-xs font-bold text-slate-500 group-hover:text-slate-800">📸 Seleccionar
                                         foto</span>
-                                    <span class="text-[9px] text-slate-500 mt-1">Se optimiza automáticamente</span>
+                                    <span class="text-[9px] text-slate-400 mt-1">Se optimiza automáticamente</span>
                                     <input type="file" id="form-image-file" accept="image/*" class="hidden">
                                 </label>
                             </div>
                             <!-- Miniatura de previsualización -->
                             <div id="image-preview-container"
-                                class="w-16 h-16 rounded-xl border border-white/10 overflow-hidden bg-slate-950 flex items-center justify-center relative shrink-0">
-                                <span class="text-[9px] text-slate-600 text-center px-1">Sin foto</span>
+                                class="w-16 h-16 rounded-xl border border-slate-200 overflow-hidden bg-slate-100 flex items-center justify-center relative shrink-0">
+                                <span class="text-[9px] text-slate-400 text-center px-1">Sin foto</span>
                                 <img id="image-preview" class="w-full h-full object-cover hidden">
                                 <button type="button" id="clear-image-btn"
-                                    class="absolute inset-0 bg-red-600/80 items-center justify-center text-white text-[10px] font-bold hidden hover:flex transition">
+                                    class="absolute inset-0 bg-red-600/90 items-center justify-center text-white text-[10px] font-bold hidden hover:flex transition">
                                     Quitar
                                 </button>
                             </div>
@@ -370,12 +378,12 @@
                         <input type="hidden" id="form-image-base64">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Estado de Colección</label>
+                        <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Estado de Colección</label>
                         <select id="form-status"
-                            class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-xs md:text-sm focus:outline-none focus:border-blue-500 transition">
-                            <option value="Normal">Normal</option>
-                            <option value="Nuevo">Novedades (New Arrival)</option>
-                            <option value="Promo">Promociones (Promo)</option>
+                            class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-2.5 text-xs md:text-sm focus:outline-none focus:border-blue-500 focus:bg-white transition">
+                                <option value="Normal">Normal</option>
+                                <option value="Nuevo">Novedades (New Arrival)</option>
+                                <option value="Promo">Promociones (Promo)</option>
                         </select>
                     </div>
                     <div class="flex gap-2 pt-1">
@@ -384,7 +392,7 @@
                             Guardar Producto
                         </button>
                         <button type="button" id="cancel-edit-btn"
-                            class="hidden bg-white/5 hover:bg-white/10 text-white px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold transition">
+                            class="hidden bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold transition border border-slate-200/60 shadow-sm">
                             Cancelar
                         </button>
                     </div>
@@ -393,13 +401,13 @@
 
             <!-- Listado de Productos (3/5 del ancho) -->
             <div class="lg:col-span-3 space-y-4 overflow-y-auto">
-                <h4 class="text-base font-bold text-blue-400 uppercase tracking-wider">Productos en Catálogo</h4>
-                <div class="bg-slate-950/40 border border-white/5 rounded-2xl overflow-hidden">
+                <h4 class="text-base font-bold text-blue-600 uppercase tracking-wider">Productos en Catálogo</h4>
+                <div class="bg-slate-50 border border-slate-200/60 rounded-2xl overflow-hidden shadow-sm">
                     <div class="max-h-[420px] overflow-y-auto">
                         <table class="w-full text-left border-collapse">
                             <thead>
                                 <tr
-                                    class="bg-white/5 border-b border-white/10 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                                    class="bg-slate-100 border-b border-slate-200 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
                                     <th class="p-3">Imagen</th>
                                     <th class="p-3">Nombre / Info</th>
                                     <th class="p-3 text-right">Precio</th>
