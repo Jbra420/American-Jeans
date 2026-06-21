@@ -21,6 +21,8 @@ class Showroom {
     private gridElement!: HTMLElement;
     private genderFilterContainer!: HTMLElement;
     private categoryFilterContainer!: HTMLElement;
+    private catalogSearchInput!: HTMLInputElement;
+    private productCountBadge!: HTMLElement;
 
     // Elementos de Administración
     private adminAccessBtn!: HTMLButtonElement;
@@ -44,7 +46,11 @@ class Showroom {
     private formCategorySelect!: HTMLSelectElement;
     private formGenderSelect!: HTMLSelectElement;
     private formSizesInput!: HTMLInputElement;
-    private formImageInput!: HTMLInputElement;
+    private formImageFileInput!: HTMLInputElement;
+    private formImageBase64Input!: HTMLInputElement;
+    private imagePreview!: HTMLImageElement;
+    private imagePreviewContainer!: HTMLElement;
+    private clearImageBtn!: HTMLButtonElement;
     private formIsNewCheckbox!: HTMLInputElement;
     private cancelEditBtn!: HTMLButtonElement;
 
@@ -60,6 +66,8 @@ class Showroom {
         this.gridElement = document.getElementById('product-grid')!;
         this.genderFilterContainer = document.getElementById('gender-filter-container')!;
         this.categoryFilterContainer = document.getElementById('category-filter-container')!;
+        this.catalogSearchInput = document.getElementById('catalog-search') as HTMLInputElement;
+        this.productCountBadge = document.getElementById('product-count-badge')!;
 
         // Auth Dialog Elements
         this.adminAccessBtn = document.getElementById('admin-access-btn') as HTMLButtonElement;
@@ -85,7 +93,11 @@ class Showroom {
         this.formCategorySelect = document.getElementById('form-category') as HTMLSelectElement;
         this.formGenderSelect = document.getElementById('form-gender') as HTMLSelectElement;
         this.formSizesInput = document.getElementById('form-sizes') as HTMLInputElement;
-        this.formImageInput = document.getElementById('form-image') as HTMLInputElement;
+        this.formImageFileInput = document.getElementById('form-image-file') as HTMLInputElement;
+        this.formImageBase64Input = document.getElementById('form-image-base64') as HTMLInputElement;
+        this.imagePreview = document.getElementById('image-preview') as HTMLImageElement;
+        this.imagePreviewContainer = document.getElementById('image-preview-container')!;
+        this.clearImageBtn = document.getElementById('clear-image-btn') as HTMLButtonElement;
         this.formIsNewCheckbox = document.getElementById('form-is-new') as HTMLInputElement;
         this.cancelEditBtn = document.getElementById('cancel-edit-btn') as HTMLButtonElement;
 
@@ -121,6 +133,24 @@ class Showroom {
             this.adminPanelDialog.close();
         });
 
+        // Evento de búsqueda del catálogo
+        this.catalogSearchInput?.addEventListener('input', () => {
+            this.filterProducts();
+        });
+
+        // Procesamiento de subida de imagen local
+        this.formImageFileInput?.addEventListener('change', (e) => {
+            const file = this.formImageFileInput.files?.[0];
+            if (file) {
+                this.processAndCompressImage(file);
+            }
+        });
+
+        // Limpiar la imagen cargada
+        this.clearImageBtn?.addEventListener('click', () => {
+            this.clearFormImage();
+        });
+
         // Guardar/actualizar producto
         this.productForm?.addEventListener('submit', (e) => this.saveProduct(e));
 
@@ -137,6 +167,65 @@ class Showroom {
                 this.loadCatalog();
             }
         });
+    }
+
+    private processAndCompressImage(file: File): void {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const maxDimension = 600; // Resolución ideal para previsualización e incrustación liviana
+                let width = img.width;
+                let height = img.height;
+
+                if (width > height) {
+                    if (width > maxDimension) {
+                        height = Math.round((height * maxDimension) / width);
+                        width = maxDimension;
+                    }
+                } else {
+                    if (height > maxDimension) {
+                        width = Math.round((width * maxDimension) / height);
+                        height = maxDimension;
+                    }
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx?.drawImage(img, 0, 0, width, height);
+
+                // Compresión optimizada (formato jpeg con 0.75 de calidad)
+                const base64Str = canvas.toDataURL('image/jpeg', 0.75);
+                this.setFormImage(base64Str);
+            };
+            img.src = e.target?.result as string;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    private setFormImage(base64: string): void {
+        this.formImageBase64Input.value = base64;
+        this.imagePreview.src = base64;
+        this.imagePreview.classList.remove('hidden');
+        this.clearImageBtn.classList.remove('hidden');
+
+        // Ocultar el texto de "Sin foto"
+        const noPhotoText = this.imagePreviewContainer.querySelector('span');
+        if (noPhotoText) noPhotoText.classList.add('hidden');
+    }
+
+    private clearFormImage(): void {
+        this.formImageFileInput.value = '';
+        this.formImageBase64Input.value = '';
+        this.imagePreview.src = '';
+        this.imagePreview.classList.add('hidden');
+        this.clearImageBtn.classList.add('hidden');
+
+        // Mostrar el texto de "Sin foto"
+        const noPhotoText = this.imagePreviewContainer.querySelector('span');
+        if (noPhotoText) noPhotoText.classList.remove('hidden');
     }
 
     private async loadCatalog(): Promise<void> {
@@ -175,9 +264,10 @@ class Showroom {
         // Renderizar Filtros de Género
         this.genderFilterContainer.innerHTML = genders.map(g => `
             <button
-                class="gender-btn px-4 py-1.5 rounded-full text-xs font-bold transition-all border ${g === this.currentGender ? 'bg-blue-600 border-blue-600 text-white' : 'glass border-white/10 text-slate-300 hover:text-white hover:border-white/20'}"
+                class="gender-btn w-full px-5 py-2.5 rounded-2xl text-xs font-bold transition-all border text-left flex justify-between items-center ${g === this.currentGender ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-500/20' : 'glass border-white/5 text-slate-400 hover:text-white hover:border-white/10'}"
                 data-gender="${g}">
-                ${g}
+                <span>${g}</span>
+                <span class="text-[10px] opacity-60">${g === 'Todos' ? this.products.length : this.products.filter(p => p.gender === g || p.gender === 'Unisex').length}</span>
             </button>
         `).join('');
 
@@ -192,9 +282,10 @@ class Showroom {
         // Renderizar Filtros de Categorías
         this.categoryFilterContainer.innerHTML = categories.map(c => `
             <button
-                class="category-btn px-4 py-2 rounded-full text-xs md:text-sm font-bold transition-all border ${c === this.currentCategory ? 'bg-blue-600 border-blue-600 text-white' : 'glass border-white/10 text-slate-300 hover:text-white hover:border-white/20'}"
+                class="category-btn w-full px-5 py-2.5 rounded-2xl text-xs font-bold transition-all border text-left flex justify-between items-center ${c === this.currentCategory ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-500/20' : 'glass border-white/5 text-slate-400 hover:text-white hover:border-white/10'}"
                 data-category="${c}">
-                ${c}
+                <span>${c}</span>
+                <span class="text-[10px] opacity-60">${c === 'Todos' ? this.products.length : this.products.filter(p => p.category === c).length}</span>
             </button>
         `).join('');
 
@@ -208,11 +299,20 @@ class Showroom {
     }
 
     private filterProducts(): void {
+        const query = this.catalogSearchInput.value.toLowerCase().trim();
+
         const filtered = this.products.filter(p => {
             const matchGender = this.currentGender === 'Todos' || p.gender === this.currentGender || p.gender === 'Unisex';
             const matchCategory = this.currentCategory === 'Todos' || p.category === this.currentCategory;
-            return matchGender && matchCategory;
+            const matchSearch = query === '' || 
+                p.name.toLowerCase().includes(query) || 
+                p.brand.toLowerCase().includes(query) ||
+                p.category.toLowerCase().includes(query);
+            return matchGender && matchCategory && matchSearch;
         });
+
+        // Actualizar el contador
+        this.productCountBadge.textContent = `${filtered.length} ${filtered.length === 1 ? 'artículo' : 'artículos'}`;
 
         this.renderProducts(filtered);
     }
@@ -220,40 +320,49 @@ class Showroom {
     private renderProducts(products: Product[]): void {
         if (products.length === 0) {
             this.gridElement.innerHTML = `
-                <div class="col-span-full text-center py-20 text-slate-500">
+                <div class="col-span-full text-center py-20 text-slate-500 glass rounded-[32px] border border-white/5">
                     <p class="text-4xl mb-3">😕</p>
-                    <p class="font-semibold text-lg text-slate-400">Sin productos para estos filtros.</p>
-                    <p class="text-xs text-slate-500 mt-1">Prueba combinando otro género y categoría.</p>
+                    <p class="font-luxury font-bold text-lg text-slate-300">No encontramos lo que buscas</p>
+                    <p class="text-xs text-slate-500 mt-1.5">Intenta buscando otra prenda o cambiando tus filtros.</p>
                 </div>`;
             return;
         }
 
         this.gridElement.innerHTML = products.map(p => `
-            <div class="product-card group relative bg-white/5 rounded-3xl overflow-hidden border border-white/5 transition-all duration-300 hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-900/20 animate__animated animate__fadeIn">
-                <div class="h-80 overflow-hidden relative">
+            <div class="product-card group relative bg-white/[0.02] rounded-[32px] overflow-hidden border border-white/5 transition-all duration-500 hover:border-blue-500/30 hover:shadow-2xl hover:shadow-blue-500/5 animate__animated animate__fadeIn">
+                <div class="aspect-[3/4] w-full overflow-hidden relative bg-slate-950">
                     <img
                         src="${p.image}"
                         alt="${p.name}"
                         loading="lazy"
-                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent lg:opacity-0 lg:group-hover:opacity-100 transition-opacity flex items-end p-4 md:p-6">
+                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    
+                    <!-- Hover overlay with WhatsApp -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end p-4 md:p-6 z-10">
                         <button
                             onclick="window.showroom.contactWhatsApp('${p.name}', '${p.brand}')"
-                            class="btn-buy w-full bg-green-500 text-white py-3 rounded-xl font-bold lg:translate-y-4 lg:group-hover:translate-y-0 transition-all duration-300 flex items-center justify-center gap-2 active:scale-95 shadow-[0_0_15px_rgba(34,197,94,0.4)]">
+                            class="w-full bg-green-500 hover:bg-green-400 text-white py-3.5 rounded-2xl font-bold transition-all duration-300 flex items-center justify-center gap-2 active:scale-95 shadow-[0_0_20px_rgba(34,197,94,0.4)] translate-y-3 group-hover:translate-y-0">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
-                            <span>Consultar por WhatsApp</span>
+                            <span>Consultar WhatsApp</span>
                         </button>
                     </div>
-                    ${p.isNew ? '<span class="absolute top-4 left-4 bg-blue-600/80 backdrop-blur-md text-[10px] px-3 py-1 rounded-full font-black uppercase tracking-tighter">New Arrival</span>' : ''}
+
+                    <!-- WhatsApp touch helper for mobile (visible when not hovered, subtle green icon) -->
+                    <div class="lg:hidden absolute bottom-3.5 right-3.5 bg-green-500 text-white p-3 rounded-full shadow-lg shadow-green-500/20 active:scale-95 z-20"
+                        onclick="event.stopPropagation(); window.showroom.contactWhatsApp('${p.name}', '${p.brand}')">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+                    </div>
+
+                    ${p.isNew ? '<span class="absolute top-4 left-4 bg-blue-500/80 backdrop-blur-md text-[9px] px-3 py-1 rounded-full font-extrabold uppercase tracking-widest border border-blue-400/20 shadow-lg shadow-blue-500/20 z-20 animate__animated animate__pulse animate__infinite">Nuevo</span>' : ''}
                 </div>
-                <div class="p-6">
-                    <p class="text-blue-400 text-xs font-bold mb-1 uppercase tracking-widest">${p.brand} • ${p.category} (${p.gender})</p>
-                    <h3 class="text-lg font-bold text-white mb-3">${p.name}</h3>
-                    <div class="flex justify-between items-center">
-                        <span class="text-2xl font-black text-white">$${p.price.toFixed(2)}</span>
-                        <div class="flex gap-1 flex-wrap justify-end max-w-[120px]">
-                            ${p.sizes.slice(0, 2).map(s => `<span class="text-[10px] border border-white/20 px-2 py-1 rounded">${s}</span>`).join('')}
-                            ${p.sizes.length > 2 ? `<span class="text-[10px] border border-white/20 px-2 py-1 rounded">+${p.sizes.length - 2}</span>` : ''}
+                <div class="p-6 space-y-2">
+                    <p class="text-blue-400 text-[10px] font-bold uppercase tracking-widest">${p.brand} • ${p.category} (${p.gender})</p>
+                    <h3 class="text-base font-bold text-white tracking-tight line-clamp-1 group-hover:text-blue-300 transition duration-300">${p.name}</h3>
+                    <div class="flex justify-between items-center pt-2 border-t border-white/5">
+                        <span class="text-xl font-extrabold text-white">$${p.price.toFixed(2)}</span>
+                        <div class="flex gap-1 flex-wrap justify-end">
+                            ${p.sizes.slice(0, 3).map(s => `<span class="text-[9px] border border-white/10 px-1.5 py-0.5 rounded bg-white/[0.02] text-slate-400 font-bold">${s}</span>`).join('')}
+                            ${p.sizes.length > 3 ? `<span class="text-[9px] border border-white/10 px-1.5 py-0.5 rounded bg-white/[0.02] text-slate-400 font-bold">+${p.sizes.length - 3}</span>` : ''}
                         </div>
                     </div>
                 </div>
@@ -313,8 +422,13 @@ class Showroom {
         const category = this.formCategorySelect.value as any;
         const gender = this.formGenderSelect.value as any;
         const sizes = this.formSizesInput.value.split(',').map(s => s.trim()).filter(s => s.length > 0);
-        const image = this.formImageInput.value.trim();
+        const image = this.formImageBase64Input.value.trim();
         const isNew = this.formIsNewCheckbox.checked;
+
+        if (!image) {
+            alert('Por favor selecciona una foto para el producto.');
+            return;
+        }
 
         if (idStr === '') {
             // Generar nuevo ID único
@@ -348,9 +462,11 @@ class Showroom {
         this.formCategorySelect.value = product.category;
         this.formGenderSelect.value = product.gender;
         this.formSizesInput.value = product.sizes.join(', ');
-        this.formImageInput.value = product.image;
-        this.formIsNewCheckbox.checked = !!product.isNew;
+        
+        // Cargar imagen en formulario
+        this.setFormImage(product.image);
 
+        this.formIsNewCheckbox.checked = !!product.isNew;
         this.cancelEditBtn.classList.remove('hidden');
     }
 
@@ -366,6 +482,7 @@ class Showroom {
     private resetForm(): void {
         this.productForm.reset();
         this.productIdInput.value = '';
+        this.clearFormImage();
         this.formTitle.textContent = 'Añadir Nuevo Producto';
         this.cancelEditBtn.classList.add('hidden');
     }
@@ -385,7 +502,6 @@ class Showroom {
     }
 
     public contactWhatsApp(name: string, brand: string): void {
-        // Reemplaza con el número real en formato internacional
         const phone = "593984186548"; // Número de Cuenca/Ecuador
         const text = encodeURIComponent(`¡Hola American Jeans! 👋 Vi en su web el modelo *${name}* de *${brand}*. ¿Tienen stock disponible? ¿Cuáles tallas hay?`);
         window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
