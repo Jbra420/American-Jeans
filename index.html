@@ -108,8 +108,19 @@
             </div>
 
             <!-- Filtros TS -->
-            <div id="filter-container" class="flex flex-wrap gap-2">
-                <!-- Los botones se generan vía TS -->
+            <div class="flex flex-col gap-4">
+                <div class="flex flex-wrap gap-3 items-center">
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-widest mr-2">Género:</span>
+                    <div id="gender-filter-container" class="flex gap-2">
+                        <!-- Generado por TS -->
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-3 items-center">
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-widest mr-2">Prenda:</span>
+                    <div id="category-filter-container" class="flex flex-wrap gap-2">
+                        <!-- Generado por TS -->
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -147,10 +158,140 @@
                     referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
         </div>
-        <div class="text-center text-slate-500 text-sm border-t border-white/5 pt-10">
-            &copy; 2024 American Jeans - Importadores Directos USA.
+        <div class="text-center text-slate-500 text-sm border-t border-white/5 pt-10 flex flex-col md:flex-row justify-between items-center gap-4 px-6">
+            <div>&copy; 2024 American Jeans - Importadores Directos USA.</div>
+            <button id="admin-access-btn" class="text-xs text-slate-600 hover:text-blue-400 transition font-bold flex items-center gap-1.5 border border-slate-800 hover:border-blue-400/40 rounded-full px-4 py-1.5 bg-black/10">
+                🔒 Acceso Administrador
+            </button>
         </div>
     </footer>
+
+    <!-- Dialog de Autenticación de Administrador -->
+    <dialog id="admin-auth-dialog" class="glass rounded-3xl p-6 text-slate-200 w-full max-w-md border border-white/10 backdrop:bg-black/80 focus:outline-none">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-xl font-extrabold tracking-tight">Acceso de Administración</h3>
+            <button id="close-auth-btn" class="text-slate-400 hover:text-white text-xl font-bold">&times;</button>
+        </div>
+        <form id="admin-auth-form" class="space-y-4">
+            <div>
+                <label for="admin-password" class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Contraseña de Acceso</label>
+                <input type="password" id="admin-password" placeholder="Introduce la contraseña" required
+                    class="w-full bg-slate-900/80 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition">
+                <p id="auth-error-msg" class="text-red-400 text-xs mt-2 hidden">⚠️ Contraseña incorrecta. Inténtalo de nuevo.</p>
+            </div>
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition active:scale-95 shadow-lg shadow-blue-500/20">
+                Iniciar Sesión
+            </button>
+        </form>
+    </dialog>
+
+    <!-- Dialog del Panel de Administración -->
+    <dialog id="admin-panel-dialog" class="glass rounded-3xl p-6 md:p-8 text-slate-200 w-full max-w-5xl h-[85vh] border border-white/10 backdrop:bg-black/80 focus:outline-none">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-white/5 pb-4">
+            <div>
+                <h3 class="text-2xl md:text-3xl font-extrabold tracking-tight">Panel de Control <span class="text-blue-500">Catálogo</span></h3>
+                <p class="text-xs text-amber-400 font-semibold mt-1">⚠️ Edición en vista previa (local). Recuerda descargar y subir "products.json" al repositorio.</p>
+            </div>
+            <div class="flex flex-wrap gap-2.5">
+                <button id="reset-catalog-btn" class="bg-red-950/40 hover:bg-red-900/60 text-red-400 border border-red-500/20 px-3 py-2 rounded-xl text-xs md:text-sm font-bold transition active:scale-95">
+                    🔄 Restaurar Original
+                </button>
+                <button id="download-json-btn" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-xs md:text-sm font-bold transition flex items-center gap-2 active:scale-95 shadow-lg shadow-emerald-500/20">
+                    📥 Descargar products.json
+                </button>
+                <button id="close-admin-panel-btn" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-xs md:text-sm font-bold transition active:scale-95">
+                    Cerrar Panel
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 h-[calc(100%-85px)] overflow-y-auto pr-1">
+            <!-- Formulario de Producto (2/5 del ancho) -->
+            <div class="lg:col-span-2 space-y-4 border-b lg:border-b-0 lg:border-r border-white/10 pb-6 lg:pb-0 lg:pr-6">
+                <h4 id="form-title" class="text-base font-bold text-blue-400 uppercase tracking-wider">Añadir Nuevo Producto</h4>
+                <form id="product-form" class="space-y-3.5">
+                    <input type="hidden" id="product-id" value="">
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Nombre</label>
+                        <input type="text" id="form-name" required placeholder="Ej: Levi's 501 Original Fit" class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-xs md:text-sm focus:outline-none focus:border-blue-500 transition">
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Marca</label>
+                            <input type="text" id="form-brand" required placeholder="Ej: Levi's" class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-xs md:text-sm focus:outline-none focus:border-blue-500 transition">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Precio ($)</label>
+                            <input type="number" id="form-price" step="0.01" required placeholder="58.00" class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-xs md:text-sm focus:outline-none focus:border-blue-500 transition">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Categoría</label>
+                            <select id="form-category" class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-xs md:text-sm focus:outline-none focus:border-blue-500 transition">
+                                <option value="Pantalones">Pantalones</option>
+                                <option value="Camisas">Camisas</option>
+                                <option value="Jackets">Jackets</option>
+                                <option value="Zapatos">Zapatos</option>
+                                <option value="Accesorios">Accesorios</option>
+                                <option value="Otros">Otros</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Género</label>
+                            <select id="form-gender" class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-xs md:text-sm focus:outline-none focus:border-blue-500 transition">
+                                <option value="Hombre">Hombre</option>
+                                <option value="Mujer">Mujer</option>
+                                <option value="Unisex">Unisex</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Tallas (separadas por comas)</label>
+                        <input type="text" id="form-sizes" required placeholder="Ej: 30, 32, 34 o S, M, L" class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-xs md:text-sm focus:outline-none focus:border-blue-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">URL de Imagen</label>
+                        <input type="url" id="form-image" required placeholder="Ej: https://images.unsplash.com/..." class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-xs md:text-sm focus:outline-none focus:border-blue-500 transition">
+                    </div>
+                    <div class="flex items-center gap-2 py-1">
+                        <input type="checkbox" id="form-is-new" class="w-4 h-4 text-blue-600 bg-slate-900 border-white/10 rounded focus:ring-blue-500 transition">
+                        <label for="form-is-new" class="text-xs md:text-sm font-semibold cursor-pointer">Marcar como "New Arrival"</label>
+                    </div>
+                    <div class="flex gap-2 pt-1">
+                        <button type="submit" id="save-product-btn" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-xl transition text-xs md:text-sm active:scale-95 shadow-lg shadow-blue-500/20">
+                            Guardar Producto
+                        </button>
+                        <button type="button" id="cancel-edit-btn" class="hidden bg-white/5 hover:bg-white/10 text-white px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold transition">
+                            Cancelar
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Listado de Productos (3/5 del ancho) -->
+            <div class="lg:col-span-3 space-y-4 overflow-y-auto">
+                <h4 class="text-base font-bold text-blue-400 uppercase tracking-wider">Productos en Catálogo</h4>
+                <div class="bg-slate-950/40 border border-white/5 rounded-2xl overflow-hidden">
+                    <div class="max-h-[420px] overflow-y-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-white/5 border-b border-white/10 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                                    <th class="p-3">Imagen</th>
+                                    <th class="p-3">Nombre / Info</th>
+                                    <th class="p-3 text-right">Precio</th>
+                                    <th class="p-3 text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-products-table-body">
+                                <!-- Los productos se inyectan dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </dialog>
 
     <script src="app.js"></script>
 </body>

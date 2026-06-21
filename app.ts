@@ -1,154 +1,218 @@
-// Definición de tipos para robustez
+// Definición de tipo para los productos del catálogo
 interface Product {
     id: number;
     name: string;
     brand: string;
-    category: 'Hombre' | 'Mujer';
+    category: 'Pantalones' | 'Camisas' | 'Jackets' | 'Zapatos' | 'Accesorios' | 'Otros';
+    gender: 'Hombre' | 'Mujer' | 'Unisex';
     price: number;
     sizes: string[];
     image: string;
     isNew?: boolean;
 }
 
-// Datos de productos (inventario)
-const PRODUCTS: Product[] = [
-    {
-        id: 1,
-        name: "Levi's 501 Original Fit",
-        brand: "Levi's",
-        category: "Hombre",
-        price: 58.00,
-        sizes: ["30", "32", "34", "36"],
-        isNew: true,
-        image: "https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=600&q=80"
-    },
-    {
-        id: 2,
-        name: "Hollister High-Rise Jean",
-        brand: "Hollister",
-        category: "Mujer",
-        price: 45.00,
-        sizes: ["3", "5", "7", "9"],
-        isNew: true,
-        image: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=600&q=80"
-    },
-    {
-        id: 3,
-        name: "American Eagle Slim",
-        brand: "American Eagle",
-        category: "Hombre",
-        price: 52.00,
-        sizes: ["28", "30", "32"],
-        isNew: true,
-        image: "https://images.unsplash.com/photo-1582552919992-373e46713bc4?auto=format&fit=crop&w=600&q=80"
-    },
-    {
-        id: 4,
-        name: "Calvin Klein Bootcut",
-        brand: "Calvin Klein",
-        category: "Mujer",
-        price: 65.00,
-        sizes: ["5", "7", "9", "11"],
-        isNew: false,
-        image: "https://images.unsplash.com/photo-1604176354204-9268737828e4?auto=format&fit=crop&w=600&q=80"
-    },
-    {
-        id: 5,
-        name: "Vans Old Skool Classic",
-        brand: "Vans",
-        category: "Hombre",
-        price: 75.00,
-        sizes: ["8", "9", "10", "11"],
-        isNew: true,
-        image: "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?auto=format&fit=crop&w=600&q=80"
-    },
-    {
-        id: 6,
-        name: "Skechers D'Lites",
-        brand: "Skechers",
-        category: "Mujer",
-        price: 85.00,
-        sizes: ["6", "7", "8"],
-        isNew: false,
-        image: "https://images.unsplash.com/photo-1560769629-975ec94e6a86?auto=format&fit=crop&w=600&q=80"
-    },
-    {
-        id: 7,
-        name: "New Balance 574 Core",
-        brand: "New Balance",
-        category: "Hombre",
-        price: 90.00,
-        sizes: ["9", "10", "11", "12"],
-        isNew: true,
-        image: "https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?auto=format&fit=crop&w=600&q=80"
-    },
-    {
-        id: 8,
-        name: "Levi's Trucker Jacket",
-        brand: "Levi's",
-        category: "Mujer",
-        price: 110.00,
-        sizes: ["S", "M", "L"],
-        isNew: false,
-        image: "https://images.unsplash.com/photo-1576871337632-b9aef4c17ab9?auto=format&fit=crop&w=600&q=80"
-    }
-];
-
 class Showroom {
+    private products: Product[] = [];
+    private currentCategory: string = 'Todos';
+    private currentGender: string = 'Todos';
+    private adminPasswordVal: string = 'american123'; // Contraseña por defecto
+
+    // Elementos del Catálogo
     private gridElement!: HTMLElement;
-    private filterContainer!: HTMLElement;
-    private currentFilter: string = 'Todos';
+    private genderFilterContainer!: HTMLElement;
+    private categoryFilterContainer!: HTMLElement;
+
+    // Elementos de Administración
+    private adminAccessBtn!: HTMLButtonElement;
+    private adminAuthDialog!: HTMLDialogElement;
+    private adminAuthForm!: HTMLFormElement;
+    private adminPasswordInput!: HTMLInputElement;
+    private authErrorMsg!: HTMLElement;
+    private closeAuthBtn!: HTMLButtonElement;
+
+    private adminPanelDialog!: HTMLDialogElement;
+    private closeAdminPanelBtn!: HTMLButtonElement;
+    private downloadJsonBtn!: HTMLButtonElement;
+    private resetCatalogBtn!: HTMLButtonElement;
+
+    private productForm!: HTMLFormElement;
+    private formTitle!: HTMLElement;
+    private productIdInput!: HTMLInputElement;
+    private formNameInput!: HTMLInputElement;
+    private formBrandInput!: HTMLInputElement;
+    private formPriceInput!: HTMLInputElement;
+    private formCategorySelect!: HTMLSelectElement;
+    private formGenderSelect!: HTMLSelectElement;
+    private formSizesInput!: HTMLInputElement;
+    private formImageInput!: HTMLInputElement;
+    private formIsNewCheckbox!: HTMLInputElement;
+    private cancelEditBtn!: HTMLButtonElement;
+
+    private adminProductsTableBody!: HTMLElement;
 
     constructor() {
-        const grid = document.getElementById('product-grid');
-        const filters = document.getElementById('filter-container');
-
-        if (!grid || !filters) {
-            console.error('American Jeans: No se encontraron los elementos del catálogo en el DOM.');
-            return;
-        }
-
-        this.gridElement = grid;
-        this.filterContainer = filters;
-        this.init();
+        this.getDomElements();
+        this.setupAdminListeners();
+        this.loadCatalog();
     }
 
-    private init(): void {
+    private getDomElements(): void {
+        this.gridElement = document.getElementById('product-grid')!;
+        this.genderFilterContainer = document.getElementById('gender-filter-container')!;
+        this.categoryFilterContainer = document.getElementById('category-filter-container')!;
+
+        // Auth Dialog Elements
+        this.adminAccessBtn = document.getElementById('admin-access-btn') as HTMLButtonElement;
+        this.adminAuthDialog = document.getElementById('admin-auth-dialog') as HTMLDialogElement;
+        this.adminAuthForm = document.getElementById('admin-auth-form') as HTMLFormElement;
+        this.adminPasswordInput = document.getElementById('admin-password') as HTMLInputElement;
+        this.authErrorMsg = document.getElementById('auth-error-msg')!;
+        this.closeAuthBtn = document.getElementById('close-auth-btn') as HTMLButtonElement;
+
+        // Panel Dialog Elements
+        this.adminPanelDialog = document.getElementById('admin-panel-dialog') as HTMLDialogElement;
+        this.closeAdminPanelBtn = document.getElementById('close-admin-panel-btn') as HTMLButtonElement;
+        this.downloadJsonBtn = document.getElementById('download-json-btn') as HTMLButtonElement;
+        this.resetCatalogBtn = document.getElementById('reset-catalog-btn') as HTMLButtonElement;
+
+        // Form Elements
+        this.productForm = document.getElementById('product-form') as HTMLFormElement;
+        this.formTitle = document.getElementById('form-title')!;
+        this.productIdInput = document.getElementById('product-id') as HTMLInputElement;
+        this.formNameInput = document.getElementById('form-name') as HTMLInputElement;
+        this.formBrandInput = document.getElementById('form-brand') as HTMLInputElement;
+        this.formPriceInput = document.getElementById('form-price') as HTMLInputElement;
+        this.formCategorySelect = document.getElementById('form-category') as HTMLSelectElement;
+        this.formGenderSelect = document.getElementById('form-gender') as HTMLSelectElement;
+        this.formSizesInput = document.getElementById('form-sizes') as HTMLInputElement;
+        this.formImageInput = document.getElementById('form-image') as HTMLInputElement;
+        this.formIsNewCheckbox = document.getElementById('form-is-new') as HTMLInputElement;
+        this.cancelEditBtn = document.getElementById('cancel-edit-btn') as HTMLButtonElement;
+
+        // Table List
+        this.adminProductsTableBody = document.getElementById('admin-products-table-body')!;
+    }
+
+    private setupAdminListeners(): void {
+        // Abrir y cerrar login
+        this.adminAccessBtn?.addEventListener('click', () => {
+            this.adminPasswordInput.value = '';
+            this.authErrorMsg.classList.add('hidden');
+            this.adminAuthDialog.showModal();
+        });
+
+        this.closeAuthBtn?.addEventListener('click', () => {
+            this.adminAuthDialog.close();
+        });
+
+        // Intentar iniciar sesión
+        this.adminAuthForm?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (this.adminPasswordInput.value === this.adminPasswordVal) {
+                this.adminAuthDialog.close();
+                this.showAdminPanel();
+            } else {
+                this.authErrorMsg.classList.remove('hidden');
+            }
+        });
+
+        // Cerrar panel de administración
+        this.closeAdminPanelBtn?.addEventListener('click', () => {
+            this.adminPanelDialog.close();
+        });
+
+        // Guardar/actualizar producto
+        this.productForm?.addEventListener('submit', (e) => this.saveProduct(e));
+
+        // Cancelar edición
+        this.cancelEditBtn?.addEventListener('click', () => this.resetForm());
+
+        // Descargar JSON de productos
+        this.downloadJsonBtn?.addEventListener('click', () => this.downloadJson());
+
+        // Restaurar catálogo desde el servidor (products.json)
+        this.resetCatalogBtn?.addEventListener('click', () => {
+            if (confirm('¿Estás seguro de que deseas eliminar tus cambios locales y restaurar el catálogo original del servidor?')) {
+                localStorage.removeItem('american_jeans_catalog');
+                this.loadCatalog();
+            }
+        });
+    }
+
+    private async loadCatalog(): Promise<void> {
+        try {
+            const localData = localStorage.getItem('american_jeans_catalog');
+            if (localData) {
+                this.products = JSON.parse(localData);
+            } else {
+                const response = await fetch('products.json');
+                if (response.ok) {
+                    this.products = await response.json();
+                    localStorage.setItem('american_jeans_catalog', JSON.stringify(this.products));
+                } else {
+                    console.error('No se pudo cargar el archivo products.json del servidor.');
+                }
+            }
+        } catch (error) {
+            console.error('Error cargando el catálogo de productos:', error);
+        } finally {
+            this.initUI();
+        }
+    }
+
+    private initUI(): void {
         this.renderFilters();
-        this.renderProducts(PRODUCTS);
+        this.filterProducts();
+        if (this.adminPanelDialog.open) {
+            this.renderAdminProducts();
+        }
     }
 
     private renderFilters(): void {
-        const filterOptions = ['Todos', 'Hombre', 'Mujer', "Levi's", 'Vans', 'New Balance'];
+        const genders = ['Todos', 'Hombre', 'Mujer'];
+        const categories = ['Todos', 'Pantalones', 'Camisas', 'Jackets', 'Zapatos', 'Accesorios', 'Otros'];
 
-        this.filterContainer.innerHTML = filterOptions.map(f => `
+        // Renderizar Filtros de Género
+        this.genderFilterContainer.innerHTML = genders.map(g => `
             <button
-                class="filter-btn px-4 py-2 md:px-6 md:py-2 rounded-full glass text-xs md:text-sm font-bold transition-all hover:bg-blue-600 ${f === 'Todos' ? 'bg-blue-600' : ''}"
-                data-filter="${f}">
-                ${f}
+                class="gender-btn px-4 py-1.5 rounded-full text-xs font-bold transition-all border ${g === this.currentGender ? 'bg-blue-600 border-blue-600 text-white' : 'glass border-white/10 text-slate-300 hover:text-white hover:border-white/20'}"
+                data-gender="${g}">
+                ${g}
             </button>
         `).join('');
 
-        this.filterContainer.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => this.handleFilter(e));
+        this.genderFilterContainer.querySelectorAll('.gender-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const target = e.currentTarget as HTMLButtonElement;
+                this.currentGender = target.dataset.gender!;
+                this.initUI();
+            });
+        });
+
+        // Renderizar Filtros de Categorías
+        this.categoryFilterContainer.innerHTML = categories.map(c => `
+            <button
+                class="category-btn px-4 py-2 rounded-full text-xs md:text-sm font-bold transition-all border ${c === this.currentCategory ? 'bg-blue-600 border-blue-600 text-white' : 'glass border-white/10 text-slate-300 hover:text-white hover:border-white/20'}"
+                data-category="${c}">
+                ${c}
+            </button>
+        `).join('');
+
+        this.categoryFilterContainer.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const target = e.currentTarget as HTMLButtonElement;
+                this.currentCategory = target.dataset.category!;
+                this.initUI();
+            });
         });
     }
 
-    private handleFilter(e: Event): void {
-        const target = e.target as HTMLButtonElement;
-        const filter = target.dataset.filter!;
-
-        this.currentFilter = filter;
-
-        // Actualizar estado visual de botones
-        this.filterContainer.querySelectorAll('.filter-btn').forEach(b => {
-            b.classList.remove('bg-blue-600');
+    private filterProducts(): void {
+        const filtered = this.products.filter(p => {
+            const matchGender = this.currentGender === 'Todos' || p.gender === this.currentGender || p.gender === 'Unisex';
+            const matchCategory = this.currentCategory === 'Todos' || p.category === this.currentCategory;
+            return matchGender && matchCategory;
         });
-        target.classList.add('bg-blue-600');
-
-        const filtered = filter === 'Todos'
-            ? PRODUCTS
-            : PRODUCTS.filter(p => p.category === filter || p.brand === filter);
 
         this.renderProducts(filtered);
     }
@@ -157,8 +221,9 @@ class Showroom {
         if (products.length === 0) {
             this.gridElement.innerHTML = `
                 <div class="col-span-full text-center py-20 text-slate-500">
-                    <p class="text-2xl mb-2">😕</p>
-                    <p class="font-semibold">Sin productos para este filtro.</p>
+                    <p class="text-4xl mb-3">😕</p>
+                    <p class="font-semibold text-lg text-slate-400">Sin productos para estos filtros.</p>
+                    <p class="text-xs text-slate-500 mt-1">Prueba combinando otro género y categoría.</p>
                 </div>`;
             return;
         }
@@ -182,7 +247,7 @@ class Showroom {
                     ${p.isNew ? '<span class="absolute top-4 left-4 bg-blue-600/80 backdrop-blur-md text-[10px] px-3 py-1 rounded-full font-black uppercase tracking-tighter">New Arrival</span>' : ''}
                 </div>
                 <div class="p-6">
-                    <p class="text-blue-400 text-xs font-bold mb-1 uppercase tracking-widest">${p.brand}</p>
+                    <p class="text-blue-400 text-xs font-bold mb-1 uppercase tracking-widest">${p.brand} • ${p.category} (${p.gender})</p>
                     <h3 class="text-lg font-bold text-white mb-3">${p.name}</h3>
                     <div class="flex justify-between items-center">
                         <span class="text-2xl font-black text-white">$${p.price.toFixed(2)}</span>
@@ -196,14 +261,137 @@ class Showroom {
         `).join('');
     }
 
+    private showAdminPanel(): void {
+        this.resetForm();
+        this.renderAdminProducts();
+        this.adminPanelDialog.showModal();
+    }
+
+    private renderAdminProducts(): void {
+        if (this.products.length === 0) {
+            this.adminProductsTableBody.innerHTML = `
+                <tr>
+                    <td colspan="4" class="p-8 text-center text-slate-500">No hay productos en el catálogo.</td>
+                </tr>`;
+            return;
+        }
+
+        this.adminProductsTableBody.innerHTML = this.products.map(p => `
+            <tr class="border-b border-white/5 hover:bg-white/[0.02] text-xs transition">
+                <td class="p-3">
+                    <img src="${p.image}" alt="${p.name}" class="w-12 h-12 object-cover rounded-xl border border-white/10">
+                </td>
+                <td class="p-3">
+                    <div class="font-bold text-white">${p.name}</div>
+                    <div class="text-[10px] text-slate-400 mt-0.5">${p.brand} • ${p.category} • ${p.gender}</div>
+                    <div class="text-[9px] text-slate-500">Tallas: ${p.sizes.join(', ')}</div>
+                </td>
+                <td class="p-3 text-right font-semibold text-white">
+                    $${p.price.toFixed(2)}
+                </td>
+                <td class="p-3">
+                    <div class="flex justify-center gap-2">
+                        <button onclick="window.showroom.editProduct(${p.id})" class="bg-blue-600/20 hover:bg-blue-600/40 text-blue-400 border border-blue-500/20 px-2.5 py-1 rounded-lg font-bold transition">
+                            Editar
+                        </button>
+                        <button onclick="window.showroom.deleteProduct(${p.id})" class="bg-red-600/20 hover:bg-red-600/40 text-red-400 border border-red-500/20 px-2.5 py-1 rounded-lg font-bold transition">
+                            Borrar
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    private saveProduct(e: Event): void {
+        e.preventDefault();
+
+        const idStr = this.productIdInput.value;
+        const name = this.formNameInput.value.trim();
+        const brand = this.formBrandInput.value.trim();
+        const price = parseFloat(this.formPriceInput.value);
+        const category = this.formCategorySelect.value as any;
+        const gender = this.formGenderSelect.value as any;
+        const sizes = this.formSizesInput.value.split(',').map(s => s.trim()).filter(s => s.length > 0);
+        const image = this.formImageInput.value.trim();
+        const isNew = this.formIsNewCheckbox.checked;
+
+        if (idStr === '') {
+            // Generar nuevo ID único
+            const newId = this.products.reduce((max, p) => p.id > max ? p.id : max, 0) + 1;
+            const newProduct: Product = { id: newId, name, brand, price, category, gender, sizes, image, isNew };
+            this.products.push(newProduct);
+        } else {
+            // Actualizar producto existente
+            const id = parseInt(idStr);
+            const index = this.products.findIndex(p => p.id === id);
+            if (index !== -1) {
+                this.products[index] = { id, name, brand, price, category, gender, sizes, image, isNew };
+            }
+        }
+
+        // Guardar cambios localmente
+        localStorage.setItem('american_jeans_catalog', JSON.stringify(this.products));
+        this.initUI();
+        this.resetForm();
+    }
+
+    public editProduct(id: number): void {
+        const product = this.products.find(p => p.id === id);
+        if (!product) return;
+
+        this.formTitle.textContent = 'Editar Producto';
+        this.productIdInput.value = product.id.toString();
+        this.formNameInput.value = product.name;
+        this.formBrandInput.value = product.brand;
+        this.formPriceInput.value = product.price.toFixed(2);
+        this.formCategorySelect.value = product.category;
+        this.formGenderSelect.value = product.gender;
+        this.formSizesInput.value = product.sizes.join(', ');
+        this.formImageInput.value = product.image;
+        this.formIsNewCheckbox.checked = !!product.isNew;
+
+        this.cancelEditBtn.classList.remove('hidden');
+    }
+
+    public deleteProduct(id: number): void {
+        if (!confirm('¿Estás seguro de que deseas eliminar este producto del catálogo?')) return;
+
+        this.products = this.products.filter(p => p.id !== id);
+        localStorage.setItem('american_jeans_catalog', JSON.stringify(this.products));
+        this.initUI();
+        this.resetForm();
+    }
+
+    private resetForm(): void {
+        this.productForm.reset();
+        this.productIdInput.value = '';
+        this.formTitle.textContent = 'Añadir Nuevo Producto';
+        this.cancelEditBtn.classList.add('hidden');
+    }
+
+    private downloadJson(): void {
+        const dataStr = JSON.stringify(this.products, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'products.json';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
+
     public contactWhatsApp(name: string, brand: string): void {
-        // ⚠️ Reemplaza con el número real del local en formato internacional: 593XXXXXXXXX
-        const phone = "593900000000";
+        // Reemplaza con el número real en formato internacional
+        const phone = "593984186548"; // Número de Cuenca/Ecuador
         const text = encodeURIComponent(`¡Hola American Jeans! 👋 Vi en su web el modelo *${name}* de *${brand}*. ¿Tienen stock disponible? ¿Cuáles tallas hay?`);
         window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
     }
 }
 
-// Inicializar y exponer globalmente para que los onclick inline del HTML funcionen
+// Inicializar y exponer para el onclick inline
 const showroom = new Showroom();
 (window as any).showroom = showroom;
