@@ -61,6 +61,14 @@
         .animate-shake {
             animation: shake 0.2s ease-in-out 0s 2;
         }
+        /* Ocultar barra de scroll para filtros */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
     </style>
 </head>
 
@@ -80,11 +88,52 @@
             <a href="#catalogo" class="hover:underline decoration-blue-600 decoration-2 underline-offset-4 transition-all">Catálogo</a>
             <a href="#contacto" class="hover:underline decoration-blue-600 decoration-2 underline-offset-4 transition-all">Ubicación</a>
         </div>
-        <a href="#catalogo"
-            class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 md:px-5 md:py-2 rounded-full text-xs md:text-sm font-bold transition-all shadow-lg shadow-blue-500/20 active:scale-95">
-            Ver Catálogo
-        </a>
+        <div class="flex items-center gap-3">
+            <a href="#catalogo"
+                class="hidden sm:inline-block bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 md:px-5 md:py-2 rounded-full text-xs md:text-sm font-bold transition-all shadow-lg shadow-blue-500/20 active:scale-95">
+                Ver Catálogo
+            </a>
+            <button id="mobile-menu-btn" class="md:hidden p-2 text-slate-800 hover:bg-slate-100 rounded-full transition-colors focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+        </div>
     </nav>
+    
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 z-40 bg-slate-900/95 backdrop-blur-md flex flex-col items-center justify-center gap-8 opacity-0 pointer-events-none transition-opacity duration-300">
+        <button id="close-menu-btn" class="absolute top-6 right-6 p-2 text-white/80 hover:text-white transition-colors focus:outline-none">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+        <div class="flex flex-col items-center gap-6 text-2xl font-black uppercase tracking-widest text-white">
+            <a href="#inicio" class="mobile-link hover:text-blue-400 transition-colors">Inicio</a>
+            <a href="#catalogo" class="mobile-link hover:text-blue-400 transition-colors">Catálogo</a>
+            <a href="#contacto" class="mobile-link hover:text-blue-400 transition-colors">Ubicación</a>
+            <a href="#catalogo" class="mobile-link mt-4 bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-full text-lg shadow-lg shadow-blue-500/30 transition-all">Ver Catálogo</a>
+        </div>
+    </div>
+    
+    <script>
+        // Lógica simple del menú móvil
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        function toggleMenu() {
+            const isClosed = mobileMenu.classList.contains('opacity-0');
+            if (isClosed) {
+                mobileMenu.classList.remove('opacity-0', 'pointer-events-none');
+                document.body.style.overflow = 'hidden';
+            } else {
+                mobileMenu.classList.add('opacity-0', 'pointer-events-none');
+                document.body.style.overflow = '';
+            }
+        }
+
+        mobileMenuBtn.addEventListener('click', toggleMenu);
+        closeMenuBtn.addEventListener('click', toggleMenu);
+        mobileLinks.forEach(link => link.addEventListener('click', toggleMenu));
+    </script>
 
     <!-- Hero Section -->
     <section id="inicio" class="relative h-screen flex items-center justify-center pt-20 overflow-hidden">
@@ -108,11 +157,11 @@
                 Redefiniendo la moda casual con la línea más completa de ropa para hombre y mujer.<br />Descubre <strong
                     class="text-blue-600 font-bold">American Jeans</strong> en el corazón de Cuenca.
             </p>
-            <div class="flex flex-wrap justify-center gap-4 animate__animated animate__fadeInUp animate__delay-1s">
+            <div class="flex flex-col sm:flex-row justify-center gap-4 animate__animated animate__fadeInUp animate__delay-1s w-full max-w-md mx-auto sm:max-w-none">
                 <a href="#catalogo"
-                    class="bg-slate-900 text-white px-10 py-4 rounded-full font-bold hover:scale-105 hover:bg-slate-800 transition shadow-lg shadow-slate-900/10">Explorar
+                    class="bg-slate-900 text-white px-8 py-3.5 sm:px-10 sm:py-4 rounded-full font-bold hover:scale-105 hover:bg-slate-800 transition shadow-lg shadow-slate-900/10 w-full sm:w-auto">Explorar
                     Catálogo</a>
-                <a href="#contacto" class="glass px-10 py-4 rounded-full font-bold hover:bg-slate-100/50 transition">Visitar
+                <a href="#contacto" class="glass px-8 py-3.5 sm:px-10 sm:py-4 rounded-full font-bold hover:bg-slate-100/50 transition w-full sm:w-auto">Visitar
                     Local</a>
             </div>
         </div>
@@ -170,7 +219,7 @@
                 <div class="glass rounded-3xl p-5 md:p-6 space-y-6 lg:sticky lg:top-24 border border-slate-200/50">
                     <div>
                         <h4 class="text-xs font-extrabold tracking-widest text-slate-500 uppercase mb-2 md:mb-3">Género</h4>
-                        <div id="gender-filter-container" class="flex flex-row flex-wrap lg:flex-col gap-2">
+                        <div id="gender-filter-container" class="flex flex-nowrap overflow-x-auto pb-2 scrollbar-hide lg:flex-col gap-2">
                             <!-- Generado por JS -->
                         </div>
                     </div>
@@ -179,7 +228,7 @@
 
                     <div>
                         <h4 class="text-xs font-extrabold tracking-widest text-slate-500 uppercase mb-2 md:mb-3">Colección</h4>
-                        <div id="status-filter-container" class="flex flex-row flex-wrap lg:flex-col gap-2">
+                        <div id="status-filter-container" class="flex flex-nowrap overflow-x-auto pb-2 scrollbar-hide lg:flex-col gap-2">
                             <!-- Generado por JS -->
                         </div>
                     </div>
@@ -188,7 +237,7 @@
                     
                     <div>
                         <h4 class="text-xs font-extrabold tracking-widest text-slate-500 uppercase mb-2 md:mb-3">Categoría de Prenda</h4>
-                        <div id="category-filter-container" class="flex flex-row flex-wrap lg:flex-col gap-2">
+                        <div id="category-filter-container" class="flex flex-nowrap overflow-x-auto pb-2 scrollbar-hide lg:flex-col gap-2">
                             <!-- Generado por JS -->
                         </div>
                     </div>
@@ -197,7 +246,7 @@
 
             <!-- Grilla de productos (Ocupa 3 columnas) -->
             <div class="lg:col-span-3">
-                <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
                     <!-- Los productos se inyectan vía TS -->
                 </div>
             </div>
@@ -245,7 +294,7 @@
 
     <!-- Dialog de Autenticación de Administrador -->
     <dialog id="admin-auth-dialog"
-        class="bg-white rounded-3xl p-6 text-slate-800 w-full max-w-md border border-slate-100 shadow-2xl backdrop:bg-black/60 focus:outline-none">
+        class="bg-white rounded-3xl p-6 text-slate-800 w-[92vw] md:w-full max-w-md border border-slate-100 shadow-2xl backdrop:bg-black/60 focus:outline-none mx-auto">
         <div class="flex justify-between items-center mb-6">
             <h3 class="text-xl font-extrabold tracking-tight text-slate-900">Acceso de Administración</h3>
             <button id="close-auth-btn" class="text-slate-400 hover:text-slate-800 text-xl font-bold">&times;</button>
@@ -269,7 +318,7 @@
 
     <!-- Dialog del Panel de Administración -->
     <dialog id="admin-panel-dialog"
-        class="bg-white rounded-3xl p-6 md:p-8 text-slate-800 w-full max-w-5xl h-[85vh] border border-slate-100 shadow-2xl backdrop:bg-black/60 focus:outline-none">
+        class="bg-white rounded-2xl md:rounded-3xl p-4 md:p-8 text-slate-800 w-[95vw] md:w-full max-w-5xl h-[90vh] md:h-[85vh] border border-slate-100 shadow-2xl backdrop:bg-black/60 focus:outline-none mx-auto">
         <div
             class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-slate-200/60 pb-4">
             <div>
@@ -402,12 +451,12 @@
             <!-- Listado de Productos (3/5 del ancho) -->
             <div class="lg:col-span-3 space-y-4 overflow-y-auto">
                 <h4 class="text-base font-bold text-blue-600 uppercase tracking-wider">Productos en Catálogo</h4>
-                <div class="bg-slate-50 border border-slate-200/60 rounded-2xl overflow-hidden shadow-sm">
-                    <div class="max-h-[420px] overflow-auto">
-                        <table class="w-full text-left border-collapse">
+                <div class="bg-slate-50 border border-slate-200/60 rounded-2xl overflow-hidden shadow-sm w-full">
+                    <div class="max-h-[420px] overflow-x-auto overflow-y-auto">
+                        <table class="w-full min-w-[500px] text-left border-collapse">
                             <thead>
                                 <tr
-                                    class="bg-slate-100 border-b border-slate-200 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                                    class="bg-slate-100 border-b border-slate-200 text-[10px] font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                                     <th class="p-3">Imagen</th>
                                     <th class="p-3">Nombre / Info</th>
                                     <th class="p-3 text-right">Precio</th>
