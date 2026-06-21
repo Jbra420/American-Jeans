@@ -264,10 +264,10 @@ class Showroom {
         // Renderizar Filtros de Género
         this.genderFilterContainer.innerHTML = genders.map(g => `
             <button
-                class="gender-btn w-full px-5 py-2.5 rounded-2xl text-xs font-bold transition-all border text-left flex justify-between items-center ${g === this.currentGender ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-500/20' : 'glass border-slate-200/60 text-slate-600 hover:text-slate-900 hover:border-slate-350'}"
+                class="gender-btn w-auto grow lg:w-full px-4 py-2 lg:px-5 lg:py-2.5 rounded-xl lg:rounded-2xl text-xs font-bold transition-all border text-left flex justify-between items-center ${g === this.currentGender ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-500/20' : 'glass border-slate-200/60 text-slate-600 hover:text-slate-900 hover:border-slate-350'}"
                 data-gender="${g}">
                 <span>${g}</span>
-                <span class="text-[10px] opacity-60">${g === 'Todos' ? this.products.length : this.products.filter(p => p.gender === g || p.gender === 'Unisex').length}</span>
+                <span class="text-[10px] opacity-60 ml-2">${g === 'Todos' ? this.products.length : this.products.filter(p => p.gender === g || p.gender === 'Unisex').length}</span>
             </button>
         `).join('');
         this.genderFilterContainer.querySelectorAll('.gender-btn').forEach(btn => {
@@ -288,10 +288,10 @@ class Showroom {
                 count = this.products.filter(p => p.status === 'Promo').length;
             return `
                 <button
-                    class="status-btn w-full px-5 py-2.5 rounded-2xl text-xs font-bold transition-all border text-left flex justify-between items-center ${col === this.currentStatus ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-500/20' : 'glass border-slate-200/60 text-slate-600 hover:text-slate-900 hover:border-slate-350'}"
+                    class="status-btn w-auto grow lg:w-full px-4 py-2 lg:px-5 lg:py-2.5 rounded-xl lg:rounded-2xl text-xs font-bold transition-all border text-left flex justify-between items-center ${col === this.currentStatus ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-500/20' : 'glass border-slate-200/60 text-slate-600 hover:text-slate-900 hover:border-slate-350'}"
                     data-status="${col}">
                     <span>${col}</span>
-                    <span class="text-[10px] opacity-60">${count}</span>
+                    <span class="text-[10px] opacity-60 ml-2">${count}</span>
                 </button>
             `;
         }).join('');
@@ -305,10 +305,10 @@ class Showroom {
         // Renderizar Filtros de Categorías
         this.categoryFilterContainer.innerHTML = categories.map(c => `
             <button
-                class="category-btn w-full px-5 py-2.5 rounded-2xl text-xs font-bold transition-all border text-left flex justify-between items-center ${c === this.currentCategory ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-500/20' : 'glass border-slate-200/60 text-slate-600 hover:text-slate-900 hover:border-slate-350'}"
+                class="category-btn w-auto grow lg:w-full px-4 py-2 lg:px-5 lg:py-2.5 rounded-xl lg:rounded-2xl text-xs font-bold transition-all border text-left flex justify-between items-center ${c === this.currentCategory ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-500/20' : 'glass border-slate-200/60 text-slate-600 hover:text-slate-900 hover:border-slate-350'}"
                 data-category="${c}">
                 <span>${c}</span>
-                <span class="text-[10px] opacity-60">${c === 'Todos' ? this.products.length : this.products.filter(p => p.category === c).length}</span>
+                <span class="text-[10px] opacity-60 ml-2">${c === 'Todos' ? this.products.length : this.products.filter(p => p.category === c).length}</span>
             </button>
         `).join('');
         this.categoryFilterContainer.querySelectorAll('.category-btn').forEach(btn => {
