@@ -352,10 +352,10 @@ class Showroom {
         this.gridElement.innerHTML = products.map(p => {
             let badgeHtml = '';
             if (p.status === 'Nuevo') {
-                badgeHtml = `<span class="absolute top-4 left-4 bg-blue-500/85 backdrop-blur-md text-[9px] px-3 py-1 rounded-full font-extrabold uppercase tracking-widest border border-blue-400/20 shadow-lg shadow-blue-500/10 z-20 animate__animated animate__pulse animate__infinite">Nuevo</span>`;
+                badgeHtml = `<span class="absolute top-4 left-4 bg-blue-600/90 text-[9px] text-white px-3 py-1 rounded-full font-extrabold uppercase tracking-widest shadow-sm z-20">Nuevo</span>`;
             }
             else if (p.status === 'Promo') {
-                badgeHtml = `<span class="absolute top-4 left-4 bg-rose-500/85 backdrop-blur-md text-[9px] px-3 py-1 rounded-full font-extrabold uppercase tracking-widest border border-rose-400/20 shadow-lg shadow-rose-500/10 z-20 animate__animated animate__pulse animate__infinite">Oferta</span>`;
+                badgeHtml = `<span class="absolute top-4 left-4 bg-rose-600/90 text-[9px] text-white px-3 py-1 rounded-full font-extrabold uppercase tracking-widest shadow-sm z-20">Oferta</span>`;
             }
             return `
                 <div class="product-card group relative bg-white rounded-[32px] overflow-hidden border border-slate-200/70 shadow-sm transition-all duration-500 hover:border-blue-500/30 hover:shadow-xl hover:shadow-blue-500/5 animate__animated animate__fadeIn">
