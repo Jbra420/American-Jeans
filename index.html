@@ -166,8 +166,16 @@
                     <hr class="border-white/5">
 
                     <div>
-                        <h4 class="text-xs font-extrabold tracking-widest text-slate-400 uppercase mb-3">Categoría de
-                            Prenda</h4>
+                        <h4 class="text-xs font-extrabold tracking-widest text-slate-400 uppercase mb-3">Colección</h4>
+                        <div id="status-filter-container" class="flex flex-col gap-2">
+                            <!-- Generado por TS -->
+                        </div>
+                    </div>
+                    
+                    <hr class="border-white/5">
+                    
+                    <div>
+                        <h4 class="text-xs font-extrabold tracking-widest text-slate-400 uppercase mb-3">Categoría de Prenda</h4>
                         <div id="category-filter-container" class="flex flex-col gap-2">
                             <!-- Generado por TS -->
                         </div>
@@ -255,8 +263,7 @@
             <div>
                 <h3 class="text-2xl md:text-3xl font-extrabold tracking-tight">Panel de Control <span
                         class="text-blue-500">Catálogo</span></h3>
-                <p class="text-xs text-amber-400 font-semibold mt-1">⚠️ Edición en vista previa (local). Recuerda
-                    descargar y subir "products.json" al repositorio.</p>
+                <p id="db-status-indicator" class="text-xs text-amber-400 font-semibold mt-1">⚠️ Cargando estado de la base de datos...</p>
             </div>
             <div class="flex flex-wrap gap-2.5">
                 <button id="reset-catalog-btn"
@@ -362,11 +369,14 @@
                         <!-- Campo oculto para almacenar el base64 de la imagen -->
                         <input type="hidden" id="form-image-base64">
                     </div>
-                    <div class="flex items-center gap-2 py-1">
-                        <input type="checkbox" id="form-is-new"
-                            class="w-4 h-4 text-blue-600 bg-slate-900 border-white/10 rounded focus:ring-blue-500 transition">
-                        <label for="form-is-new" class="text-xs md:text-sm font-semibold cursor-pointer">Marcar como
-                            "New Arrival"</label>
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Estado de Colección</label>
+                        <select id="form-status"
+                            class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-xs md:text-sm focus:outline-none focus:border-blue-500 transition">
+                            <option value="Normal">Normal</option>
+                            <option value="Nuevo">Novedades (New Arrival)</option>
+                            <option value="Promo">Promociones (Promo)</option>
+                        </select>
                     </div>
                     <div class="flex gap-2 pt-1">
                         <button type="submit" id="save-product-btn"
@@ -405,6 +415,12 @@
             </div>
         </div>
     </dialog>
+
+    <!-- SDK de Firebase Compat (Cargado en ámbito global) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <!-- Configuración del cliente -->
+    <script src="firebase-config.js"></script>
 
     <script src="app.js"></script>
 </body>
